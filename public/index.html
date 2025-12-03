@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marketplace de Carros - Web3</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <h1 class="logo">Marketplace de Carros</h1>
+                <div class="wallet-section">
+                    <button id="connectWallet" class="btn btn-primary">Conectar MetaMask</button>
+                    <span id="walletAddress" class="wallet-address"></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Navigation Tabs -->
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="marketplace">Marketplace</button>
+                <button class="tab-btn" data-tab="mis-compras">Mis Compras</button>
+                <button class="tab-btn" data-tab="agregar">Agregar Carro</button>
+                <button class="tab-btn" data-tab="pagos">Sistema de Pagos</button>
+            </div>
+
+            <!-- Tab: Marketplace -->
+            <div id="marketplace" class="tab-content active">
+                <div class="section-header">
+                    <h2>Carros Disponibles</h2>
+                    <button id="refreshCarros" class="btn btn-secondary">Actualizar</button>
+                </div>
+                <div id="carrosGrid" class="carros-grid">
+                    <!-- Los carros se cargarán dinámicamente aquí -->
+                </div>
+            </div>
+
+            <!-- Tab: Mis Compras -->
+            <div id="mis-compras" class="tab-content">
+                <h2>Mis Compras</h2>
+                <div id="misComprasGrid" class="carros-grid">
+                    <p class="info-message">Conecta tu wallet para ver tus compras</p>
+                </div>
+            </div>
+
+            <!-- Tab: Agregar Carro -->
+            <div id="agregar" class="tab-content">
+                <h2>Agregar Nuevo Carro</h2>
+                <div class="form-container">
+                    <form id="agregarCarroForm">
+                        <div class="form-group">
+                            <label for="marca">Marca *</label>
+                            <input type="text" id="marca" name="marca" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="modelo">Modelo *</label>
+                            <input type="text" id="modelo" name="modelo" required>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="anio">Año *</label>
+                                <input type="number" id="anio" name="anio" min="1900" max="2025" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="precio">Precio (ETH) *</label>
+                                <input type="number" id="precio" name="precio" step="0.001" min="0" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="kilometraje">Kilometraje</label>
+                                <input type="number" id="kilometraje" name="kilometraje" min="0">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="color">Color</label>
+                                <input type="text" id="color" name="color">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="imagenUrl">URL de Imagen</label>
+                            <input type="url" id="imagenUrl" name="imagenUrl">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-large">Agregar Carro al Marketplace</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Tab: Sistema de Pagos -->
+            <div id="pagos" class="tab-content">
+                <h2>Sistema de Pagos Distribuidos</h2>
+
+                <div class="pagos-container">
+                    <div class="pagos-card">
+                        <h3>Balance del Contrato</h3>
+                        <div class="balance-display">
+                            <span id="contractBalance">0</span> ETH
+                        </div>
+                        <button id="refreshBalance" class="btn btn-secondary">Actualizar Balance</button>
+                    </div>
+
+                    <div class="pagos-card">
+                        <h3>Hacer Depósito</h3>
+                        <form id="depositForm">
+                            <div class="form-group">
+                                <label for="depositAmount">Cantidad (ETH)</label>
+                                <input type="number" id="depositAmount" step="0.001" min="0" required placeholder="0.1">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Depositar</button>
+                        </form>
+                    </div>
+
+                    <div class="pagos-card">
+                        <h3>Liberar Fondos</h3>
+                        <p>Distribuir el balance del contrato entre los beneficiarios según sus proporciones.</p>
+                        <button id="releaseBtn" class="btn btn-success">Liberar Fondos</button>
+                    </div>
+
+                    <div class="pagos-card">
+                        <h3>Beneficiarios</h3>
+                        <div id="payeesList">
+                            <p class="info-message">Cargando beneficiarios...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal para comprar carro -->
+    <div id="comprarModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Confirmar Compra</h2>
+            <div id="modalCarroInfo"></div>
+            <button id="confirmarCompra" class="btn btn-success btn-large">Confirmar Compra</button>
+        </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div id="loadingSpinner" class="loading-spinner">
+        <div class="spinner"></div>
+        <p>Procesando transacción...</p>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
